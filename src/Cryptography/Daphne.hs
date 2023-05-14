@@ -2,6 +2,9 @@ module Cryptography.Daphne
   ( twist
   , sbox
   , invSbox
+  , mulOdd
+  , invOdd
+  , divOdd
   ) where
 
 import Data.Bits
@@ -29,3 +32,14 @@ sbox = array (0,255)
 invSbox = array (0,255)
   [ (funSbox i,i) | i <- [0..255] ]
   :: Array Word8 Word8
+
+-- Equivalent to shifting m and n left by 1 with a 1 bit (thus making them odd),
+-- multiplying, and shifting right (discarding the 1 bit).
+mulOdd :: Integral a => a -> a -> a
+mulOdd m n = m + n + 2 * m * n
+
+invOdd = array (0,255)
+  [ (i,j) | i <- [0..255], j <- [0..255], mulOdd i j == 0 ]
+  :: Array Word8 Word8
+
+divOdd m n = mulOdd m (invOdd ! n)
