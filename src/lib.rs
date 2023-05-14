@@ -1,4 +1,5 @@
 extern crate lazy_static;
+use lazy_static::lazy_static;
 
 pub fn add(left: usize, right: usize) -> usize {
     left + right
@@ -24,11 +25,15 @@ pub const fn funSbox(n: u8) -> u8 {
   0x6e^shuffle(twist(n^0x25,-1))
 }
 
-const fn usizeSbox(n: usize) -> u8 {
-  funSbox(n as u8)
+lazy_static! {
+  static ref sbox: [u8; 256] = {
+    let mut m: [u8; 256]=[0;256];
+    for i in 0..=255 {
+      m[i]=funSbox(i as u8);
+    }
+    m
+  };
 }
-
-//static sbox: [u8; 256] = core::array::from_fn(usizeSbox);
 
 #[cfg(test)]
 mod tests {
