@@ -26,10 +26,17 @@ pub const fn funSbox(n: u8) -> u8 {
 }
 
 lazy_static! {
-  static ref sbox: [u8; 256] = {
+  static ref SBOX: [u8; 256] = {
     let mut m: [u8; 256]=[0;256];
     for i in 0..=255 {
       m[i]=funSbox(i as u8);
+    }
+    m
+  };
+  static ref INV_SBOX: [u8; 256] = {
+    let mut m: [u8; 256]=[0;256];
+    for i in 0..=255 {
+      m[funSbox(i) as usize]=i;
     }
     m
   };
