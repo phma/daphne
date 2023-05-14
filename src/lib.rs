@@ -1,10 +1,6 @@
 extern crate lazy_static;
 use lazy_static::lazy_static;
 
-pub fn add(left: usize, right: usize) -> usize {
-    left + right
-}
-
 const fn twist(n: u8,k: isize) -> u8 {
   if k>0 {
     n.rotate_left(n.count_ones())
@@ -47,8 +43,10 @@ mod tests {
     use super::*;
 
     #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
+    fn test_sbox() {
+        let result = SBOX[0xf5];
+        assert_eq!(result, 0xaa);
+        let result = INV_SBOX[0xaa];
+        assert_eq!(result, 0xf5);
     }
 }
