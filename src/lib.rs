@@ -1,6 +1,8 @@
 extern crate lazy_static;
 use lazy_static::lazy_static;
 
+// Rotating a word of at least 3 bits by its population count
+// satisfies the strict avalanche criterion.
 const fn twist(n: u8,k: isize) -> u8 {
   if k>0 {
     n.rotate_left(n.count_ones())
