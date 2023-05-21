@@ -56,7 +56,7 @@ invOdd = array (0,255)
   :: Array Word8 Word8
 
 inv257 = array (0,255)
-  [ (i,j) | i <- [0..255], j <- [0..255], mul257 i j == 0 ]
+  [ (i,j) | i <- [0..255], j <- [0..255], mul257 i j == 1 ]
   :: Array Word8 Word8
 
 divOdd m n = mulOdd m (invOdd ! n)
