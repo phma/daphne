@@ -5,6 +5,8 @@ module Cryptography.Daphne
   , mulOdd
   , invOdd
   , divOdd
+  , mul257
+  , div257
   ) where
 
 import Data.Bits
@@ -38,8 +40,24 @@ invSbox = array (0,255)
 mulOdd :: Integral a => a -> a -> a
 mulOdd m n = m + n + 2 * m * n
 
+-- It's a byte operation, but involves a two-byte multiplication.
+mul257' :: Word -> Word -> Word
+mul257' a 0 = 257 - a
+mul257' 0 b = 257 - b
+mul257' a b = (a * b) `mod` 257
+
+-- Multiply a and b mod 257, where 0 represents 256.
+mul257 :: Word8 -> Word8 -> Word8
+mul257 a b = fromIntegral (mul257' (fromIntegral a) (fromIntegral b))
+
 invOdd = array (0,255)
   [ (i,j) | i <- [0..255], j <- [0..255], mulOdd i j == 0 ]
   :: Array Word8 Word8
 
+inv257 = array (0,255)
+  [ (i,j) | i <- [0..255], j <- [0..255], mul257 i j == 0 ]
+  :: Array Word8 Word8
+
 divOdd m n = mulOdd m (invOdd ! n)
+
+div257 m n = mul257 m (inv257 ! n)
