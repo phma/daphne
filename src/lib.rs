@@ -23,6 +23,12 @@ pub const fn funSbox(n: u8) -> u8 {
   0x6e^shuffle(twist(n^0x25,-1))
 }
 
+pub fn mul_odd(a: u8,b: u8) -> u8 {
+  let aw=a as u32;
+  let bw=b as u32;
+  ((aw+bw+2*aw*bw)&0xff) as u8
+}
+
 lazy_static! {
   static ref SBOX: [u8; 256] = {
     let mut m: [u8; 256]=[0;256];
@@ -38,6 +44,21 @@ lazy_static! {
     }
     m
   };
+  static ref INV_ODD: [u8; 256] = {
+    let mut m: [u8; 256]=[0;256];
+    for i in 0..=255 {
+      for j in 0..=255 {
+	if mul_odd(i,j)==0 {
+	  m[i as usize]=j;
+	}
+      }
+    }
+    m
+  };
+}
+
+pub fn div_odd(a: u8,b: u8) -> u8 {
+  mul_odd(a,INV_ODD[b as usize])
 }
 
 #[cfg(test)]
