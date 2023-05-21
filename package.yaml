@@ -49,6 +49,7 @@ executables:
     - -with-rtsopts=-N
     dependencies:
     - daphne
+    - array
 
 tests:
   daphne-test:

@@ -1,6 +1,8 @@
 module Main (main) where
 
-import Lib
+import Cryptography.Daphne
+import Text.Printf
+import Data.Array
 
 main :: IO ()
-main = someFunc
+main = putStrLn $ printf "%02x" (sbox ! 0x11)
