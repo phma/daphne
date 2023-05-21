@@ -6,6 +6,7 @@ module Cryptography.Daphne
   , invOdd
   , divOdd
   , mul257
+  , inv257
   , div257
   ) where
 

@@ -50,6 +50,7 @@ executables:
     dependencies:
     - daphne
     - array
+    - split
 
 tests:
   daphne-test:
