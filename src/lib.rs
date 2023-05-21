@@ -29,6 +29,12 @@ pub fn mul_odd(a: u8,b: u8) -> u8 {
   ((aw+bw+2*aw*bw)&0xff) as u8
 }
 
+pub fn mul_257(a: u8,b: u8) -> u8 {
+  let aw=if a==0 {256} else {a as u32};
+  let bw=if b==0 {256} else {b as u32};
+  ((aw*bw%257)&0xff) as u8
+}
+
 lazy_static! {
   static ref SBOX: [u8; 256] = {
     let mut m: [u8; 256]=[0;256];
@@ -55,10 +61,25 @@ lazy_static! {
     }
     m
   };
+  static ref INV_257: [u8; 256] = {
+    let mut m: [u8; 256]=[0;256];
+    for i in 0..=255 {
+      for j in 0..=255 {
+	if mul_257(i,j)==1 {
+	  m[i as usize]=j;
+	}
+      }
+    }
+    m
+  };
 }
 
 pub fn div_odd(a: u8,b: u8) -> u8 {
   mul_odd(a,INV_ODD[b as usize])
+}
+
+pub fn div_257(a: u8,b: u8) -> u8 {
+  mul_odd(a,INV_257[b as usize])
 }
 
 #[cfg(test)]
