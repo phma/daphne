@@ -19,4 +19,4 @@ block16str :: [Word8] -> String
 block16str a = blockStr $ chunksOf 16 a
 
 main :: IO ()
-main = putStr $ block16str $ map (inv257 !) [0..255]
+main = putStr $ block16str $ map (\x -> step x 243 125) [0..255]

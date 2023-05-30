@@ -1,8 +1,8 @@
-use daphne::div_257;
+use daphne::step;
 
 fn main() {
   for i in 0..=255 {
-    print!("{:02x} ",div_257(0,i));
+    print!("{:02x} ",step(i,243,125));
     if i%16==15 {
       println!();
     }
