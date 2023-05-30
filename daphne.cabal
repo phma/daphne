@@ -62,4 +62,7 @@ test-suite daphne-test
   build-depends:
       base >=4.7 && <5
     , daphne
+    , tasty
+    , tasty-hunit
+    , tasty-quickcheck
   default-language: Haskell2010

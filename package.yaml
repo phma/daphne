@@ -62,3 +62,6 @@ tests:
     - -with-rtsopts=-N
     dependencies:
     - daphne
+    - tasty
+    - tasty-hunit
+    - tasty-quickcheck
