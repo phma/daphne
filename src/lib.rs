@@ -19,7 +19,7 @@ const fn shuffle(n: u8) -> u8 {
   (n&0x01)
 }
 
-pub const fn funSbox(n: u8) -> u8 {
+pub const fn fun_sbox(n: u8) -> u8 {
   0x6e^shuffle(twist(n^0x25,-1))
 }
 
@@ -39,14 +39,14 @@ lazy_static! {
   static ref SBOX: [u8; 256] = {
     let mut m: [u8; 256]=[0;256];
     for i in 0..=255 {
-      m[i]=funSbox(i as u8);
+      m[i]=fun_sbox(i as u8);
     }
     m
   };
   static ref INV_SBOX: [u8; 256] = {
     let mut m: [u8; 256]=[0;256];
     for i in 0..=255 {
-      m[funSbox(i) as usize]=i;
+      m[fun_sbox(i) as usize]=i;
     }
     m
   };
