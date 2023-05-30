@@ -82,6 +82,14 @@ pub fn div_257(a: u8,b: u8) -> u8 {
   mul_odd(a,INV_257[b as usize])
 }
 
+pub fn step(x: u8,l: u8,r: u8) -> u8 {
+  mul_odd(SBOX[mul_257(x,l) as usize],r)
+}
+
+pub fn inv_step(x: u8,l: u8,r: u8) -> u8 {
+  div_257(INV_SBOX[div_odd(x,r) as usize],l)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
