@@ -8,6 +8,8 @@ module Cryptography.Daphne
   , mul257
   , inv257
   , div257
+  , step
+  , invStep
   ) where
 
 import Data.Bits
@@ -62,3 +64,7 @@ inv257 = array (0,255)
 divOdd m n = mulOdd m (invOdd ! n)
 
 div257 m n = mul257 m (inv257 ! n)
+
+step x l r = mulOdd (sbox ! (mul257 x l)) r
+
+invStep x l r = div257 (invSbox ! (divOdd x r)) l
