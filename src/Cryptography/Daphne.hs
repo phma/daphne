@@ -10,6 +10,8 @@ module Cryptography.Daphne
   , div257
   , step
   , invStep
+  , Daphne
+  , emptyDaphne
   ) where
 
 import Data.Bits
@@ -68,3 +70,7 @@ div257 m n = mul257 m (inv257 ! n)
 step x l r = mulOdd (sbox ! (mul257 x l)) r
 
 invStep x l r = div257 (invSbox ! (divOdd x r)) l
+
+data Daphne = Daphne (Seq.Seq Word8) (Seq.Seq Word8) deriving (Show)
+
+emptyDaphne = Daphne Seq.Empty Seq.Empty
