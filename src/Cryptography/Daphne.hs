@@ -11,7 +11,6 @@ module Cryptography.Daphne
   , step
   , invStep
   , Daphne
-  , emptyDaphne
   , keyDaphne
   ) where
 
@@ -72,10 +71,8 @@ step x l r = mulOdd (sbox ! (mul257 x l)) r
 
 invStep x l r = div257 (invSbox ! (divOdd x r)) l
 
-data Daphne = Daphne (Seq.Seq Word8) (Seq.Seq Word8) deriving (Show)
+data Daphne = Daphne (Seq.Seq Word8) (Seq.Seq Word8) Word8 deriving (Show)
 -- The first Seq is the key; the second is the shift register.
 
-emptyDaphne = Daphne Seq.Empty Seq.Empty
-
 keyDaphne :: [Word8] -> Daphne
-keyDaphne key = Daphne (Seq.fromList key) (Seq.replicate (length key) 0)
+keyDaphne key = Daphne (Seq.fromList key) (Seq.replicate (length key) 0) 0
