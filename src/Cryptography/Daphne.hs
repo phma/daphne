@@ -10,7 +10,7 @@ module Cryptography.Daphne
   , div257
   , step
   , invStep
-  , Daphne
+  , Daphne (..)
   , keyDaphne
   , byteEncrypt
   , byteDecrypt
