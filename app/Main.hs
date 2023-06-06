@@ -21,5 +21,18 @@ block16str a = blockStr $ chunksOf 16 a
 stepFixedPoints :: Word8 -> Word8 -> [Word8]
 stepFixedPoints l r = [ x | x <- [0..255], step x l r == x ]
 
+zerodaph = keyDaphne (replicate 16 0)
+squaredaph = keyDaphne (take 16 (map (^2) [0..]))
+sqcrypt = snd $ listEncrypt squaredaph [0..255]
+
 main :: IO ()
-main = putStr $ block16str $ map (\x -> step x 243 125) [0..255]
+main = do
+  putStrLn "Encrypt all 0s with all 0s"
+  putStr $ block16str $ snd $ listEncrypt zerodaph (replicate 256 0)
+  putStrLn "Encrypt 0..255 with squares"
+  putStr $ block16str $ sqcrypt
+  putStrLn "Decrypt the above"
+  putStr $ block16str $ snd $ listDecrypt squaredaph sqcrypt
+  putStrLn "Demonstrate resynchronization"
+  putStr $ block16str $ snd $ listDecrypt squaredaph (2:(tail sqcrypt))
+
