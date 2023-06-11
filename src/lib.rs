@@ -108,6 +108,44 @@ impl Daphne { // 372
     self.sreg.shrink_to_fit();
     self.acc=0;
   }
+
+  fn left(&self)->u8 {
+    let mut a=self.acc;
+    for i in (0..self.key.len()).rev() {
+      a=step(a,self.sreg[i],self.key[i]);
+    }
+    a
+  }
+
+  fn right(&self)->u8 {
+    let mut a=self.acc;
+    for i in 0..self.key.len() {
+      a=step(a,self.key[i],self.sreg[i]);
+    }
+    a
+  }
+
+  pub fn encrypt(&mut self,plain:u8)->u8 {
+    let crypt=step(plain,self.left(),self.right());
+    let sz=self.sreg.len();
+    self.acc=((self.acc as u16+plain as u16)&255) as u8;
+    if sz>0 {
+      self.sreg.copy_within(1..sz,0);
+      self.sreg[sz-1]=crypt;
+    }
+    crypt
+  }
+
+  pub fn decrypt(&mut self,crypt:u8)->u8 {
+    let plain=inv_step(crypt,self.left(),self.right());
+    let sz=self.sreg.len();
+    self.acc=((self.acc as u16+plain as u16)&255) as u8;
+    if sz>0 {
+      self.sreg.copy_within(1..sz,0);
+      self.sreg[sz-1]=crypt;
+    }
+    plain
+  }
 }
 
 #[cfg(test)]
