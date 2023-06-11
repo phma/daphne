@@ -90,6 +90,26 @@ pub fn inv_step(x: u8,l: u8,r: u8) -> u8 {
   div_257(INV_SBOX[div_odd(x,r) as usize],l)
 }
 
+pub struct Daphne {
+  key: Vec<u8>,
+  sreg: Vec<u8>,
+  acc: u8,
+}
+
+impl Daphne { // 372
+  pub fn set_key(&mut self,k:&[u8]) {
+    self.key.clear();
+    self.sreg.clear();
+    for i in k {
+      self.key.push(*i);
+      self.sreg.push(0);
+    }
+    self.key.shrink_to_fit();
+    self.sreg.shrink_to_fit();
+    self.acc=0;
+  }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
