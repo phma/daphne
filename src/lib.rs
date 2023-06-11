@@ -96,7 +96,10 @@ pub struct Daphne {
   acc: u8,
 }
 
-impl Daphne { // 372
+impl Daphne {
+  pub fn new() -> Daphne {
+    Daphne { key: Vec::new(), sreg:Vec::new(), acc:0 }
+  }
   pub fn set_key(&mut self,k:&[u8]) {
     self.key.clear();
     self.sreg.clear();
