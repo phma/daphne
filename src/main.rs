@@ -12,6 +12,8 @@ fn printvec(k:&[u8]) {
 fn main() {
   let mut zerodaph=Daphne::new();
   let mut squaredaph=Daphne::new();
+  let mut squaredaph1=squaredaph.clone();
+  let mut squaredaph2=squaredaph.clone();
   let mut stepvec:Vec<u8> = Vec::new();
   zerodaph.set_key(&[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
   squaredaph.set_key(&[0,1,4,9,16,25,36,49,64,81,100,121,144,169,196,225]);

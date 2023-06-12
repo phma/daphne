@@ -90,6 +90,7 @@ pub fn inv_step(x: u8,l: u8,r: u8) -> u8 {
   div_257(INV_SBOX[div_odd(x,r) as usize],l)
 }
 
+#[derive(Clone)]
 pub struct Daphne {
   key: Vec<u8>,
   sreg: Vec<u8>,
