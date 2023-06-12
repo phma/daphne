@@ -15,10 +15,28 @@ fn main() {
   let mut squaredaph1=squaredaph.clone();
   let mut squaredaph2=squaredaph.clone();
   let mut stepvec:Vec<u8> = Vec::new();
+  let mut zerocrypt:Vec<u8> = Vec::new();
+  let mut squarecrypt:Vec<u8> = Vec::new();
+  let mut squareplain:Vec<u8> = Vec::new();
   zerodaph.set_key(&[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
   squaredaph.set_key(&[0,1,4,9,16,25,36,49,64,81,100,121,144,169,196,225]);
   for i in 0..=255 {
     stepvec.push(step(i,243,125));
   }
-    printvec(&stepvec);
+  //printvec(&stepvec);
+  println!("Encrypt all 0s with all 0s");
+  for i in 0..=255 {
+    zerocrypt.push(zerodaph.encrypt(0));
+  }
+  printvec(&zerocrypt);
+  println!("Encrypt 0..255 with squares");
+  for i in 0..=255 {
+    squarecrypt.push(squaredaph.encrypt(i));
+  }
+  printvec(&squarecrypt);
+  println!("Decrypt the above");
+  for i in 0..=255 {
+    squareplain.push(squaredaph1.decrypt(squarecrypt[i]));
+  }
+  printvec(&squareplain);
 }
