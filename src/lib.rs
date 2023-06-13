@@ -79,7 +79,7 @@ pub fn div_odd(a: u8,b: u8) -> u8 {
 }
 
 pub fn div_257(a: u8,b: u8) -> u8 {
-  mul_odd(a,INV_257[b as usize])
+  mul_257(a,INV_257[b as usize])
 }
 
 pub fn step(x: u8,l: u8,r: u8) -> u8 {
