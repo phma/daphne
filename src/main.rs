@@ -39,4 +39,11 @@ fn main() {
     squareplain.push(squaredaph1.decrypt(squarecrypt[i]));
   }
   printvec(&squareplain);
+  println!("Demonstrate resynchronization");
+  squareplain.clear();
+  squarecrypt[0]=2;
+  for i in 0..=255 {
+    squareplain.push(squaredaph2.decrypt(squarecrypt[i]));
+  }
+  printvec(&squareplain);
 }
