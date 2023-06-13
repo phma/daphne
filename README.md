@@ -8,4 +8,4 @@ To run the program, type `cargo run`. The first time you run it, Cargo may downl
 You can run Daphne in the REPL with `stack ghci` or use other Stack commands.
 
 # Testing both
-The test to make sure that both implementations do the same thing is not written yet.
+Run ``./test.sh` . This runs both implementations, check that the outputs are identical, and check that a certain sequence of bytes is present.
