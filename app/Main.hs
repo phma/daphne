@@ -1,5 +1,6 @@
 module Main (main) where
 
+import Cryptography.Daphne.Internals
 import Cryptography.Daphne
 import Text.Printf
 import Data.Array

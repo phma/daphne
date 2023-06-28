@@ -26,6 +26,7 @@ source-repository head
 library
   exposed-modules:
       Cryptography.Daphne
+      Cryptography.Daphne.Internals
   other-modules:
       Paths_daphne
   hs-source-dirs:
