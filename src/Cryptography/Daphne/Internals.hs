@@ -10,11 +10,15 @@ module Cryptography.Daphne.Internals
   , div257
   , step
   , invStep
+  , computeLeft
+  , computeRight
   ) where
 
 import Data.Bits
 import Data.Array.Unboxed
 import Data.Word
+import qualified Data.Sequence as Seq
+import Data.Sequence ((><), (<|), (|>), Seq((:<|)), Seq((:|>)))
 
 -- | If a has at least 3 bits and k is relatively prime to the number of bits
 -- in a, this permutation satisfies the strict avalanche criterion.
@@ -66,3 +70,11 @@ div257 m n = mul257 m (inv257 ! n)
 step x l r = mulOdd (sbox ! (mul257 x l)) r
 
 invStep x l r = div257 (invSbox ! (divOdd x r)) l
+
+computeLeft :: Seq.Seq Word8 -> Seq.Seq Word8 -> Word8 -> Word8
+computeLeft Seq.Empty Seq.Empty acc = acc
+computeLeft (k:<|ks) (r:<|rs) acc = step (computeLeft ks rs acc) r k
+
+computeRight :: Seq.Seq Word8 -> Seq.Seq Word8 -> Word8 -> Word8
+computeRight Seq.Empty Seq.Empty acc = acc
+computeRight (ks:|>k) (rs:|>r) acc = step (computeRight ks rs acc) k r

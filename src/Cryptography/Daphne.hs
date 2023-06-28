@@ -19,14 +19,6 @@ data Daphne = Daphne (Seq.Seq Word8) (Seq.Seq Word8) Word8 deriving (Show)
 keyDaphne :: [Word8] -> Daphne
 keyDaphne key = Daphne (Seq.fromList key) (Seq.replicate (length key) 0) 0
 
-computeLeft :: Seq.Seq Word8 -> Seq.Seq Word8 -> Word8 -> Word8
-computeLeft Seq.Empty Seq.Empty acc = acc
-computeLeft (k:<|ks) (r:<|rs) acc = step (computeLeft ks rs acc) r k
-
-computeRight :: Seq.Seq Word8 -> Seq.Seq Word8 -> Word8 -> Word8
-computeRight Seq.Empty Seq.Empty acc = acc
-computeRight (ks:|>k) (rs:|>r) acc = step (computeRight ks rs acc) k r
-
 byteEncrypt :: Daphne -> Word8 -> (Daphne,Word8)
 byteEncrypt (Daphne key sreg acc) plain = ((Daphne key newsreg newacc),crypt) where
   left = computeLeft key sreg acc
