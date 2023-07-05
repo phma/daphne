@@ -6,6 +6,7 @@ import Text.Printf
 import Data.Array
 import Data.Word
 import Data.List.Split
+import System.Environment
 
 lineStr :: [Word8] -> String
 lineStr [] = ""
@@ -28,6 +29,7 @@ sqcrypt = snd $ listEncrypt squaredaph [0..255]
 
 main :: IO ()
 main = do
+  args <- getArgs
   putStrLn "Encrypt all 0s with all 0s"
   putStr $ block16str $ snd $ listEncrypt zerodaph (replicate 256 0)
   putStrLn "Encrypt 0..255 with squares"
