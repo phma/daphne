@@ -6,6 +6,7 @@ import Text.Printf
 import Data.Array
 import Data.Word
 import Data.List.Split
+import Stats
 import System.Environment
 
 lineStr :: [Word8] -> String

@@ -41,6 +41,7 @@ library
 executable daphne-exe
   main-is: Main.hs
   other-modules:
+      Stats
       Paths_daphne
   hs-source-dirs:
       app
