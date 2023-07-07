@@ -1,6 +1,7 @@
 module Stats
   ( Histo (..)
   , emptyHisto
+  , hCount
   ) where
 
 import Data.Word
@@ -12,3 +13,6 @@ data Histo = Histo (Seq.Seq Word) deriving (Show)
 
 emptyHisto :: Int -> Histo
 emptyHisto n = Histo (Seq.replicate n 0)
+
+hCount :: Int -> Histo -> Histo
+hCount n (Histo h) = Histo (Seq.adjust' (+1) n h)
