@@ -51,6 +51,7 @@ executables:
     - daphne
     - array
     - split
+    - containers
 
 tests:
   daphne-test:
