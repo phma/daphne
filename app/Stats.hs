@@ -4,6 +4,7 @@ module Stats
   , hCount
   , sacCountBit
   , bitFold
+  , sacStats
   ) where
 
 import Data.Word
@@ -17,8 +18,11 @@ newtype Histo = Histo (Seq.Seq Word) deriving (Show)
 emptyHisto :: Int -> Histo
 emptyHisto n = Histo (Seq.replicate n 0)
 
-hCount :: Int -> Histo -> Histo
-hCount n (Histo h) = Histo (Seq.adjust' (+1) n h)
+isNull :: Histo -> Bool
+isNull (Histo h) = Seq.null h
+
+hCount :: Integral a => a -> Histo -> Histo
+hCount n (Histo h) = Histo (Seq.adjust' (+1) (fromIntegral n) h)
 
 squareWave :: Int -> [Int]
 squareWave n = map ((.&. (1::Int)) . (`shift` (-n))) [0..]
@@ -43,3 +47,24 @@ bitFoldSq (x:xs) (True:bs) (a:<|as) = (xor x a):bitFoldSq xs bs as
 
 bitFold :: Bits a => [a] -> Int -> [a]
 bitFold xs n = bitFoldSq xs (squareWaveBool n) Seq.Empty
+
+sacRow :: Histo -> Int -> [Int]
+sacRow h nbits = map (sacCountBit h) [0..(nbits-1)]
+
+sacHistos' :: (Integral a,Bits a) => [a] -> Int -> Int -> [Histo]
+sacHistos' xs wid b
+  | isNull h  = []
+  | otherwise = h:(sacHistos' xs wid (b+1))
+  where h = foldr hCount (emptyHisto (shift 1 wid)) (bitFold xs b)
+
+-- FiniteBits finiteBitSize
+
+sacHistos :: (Integral a,Bits a) => [a] -> Int -> [Histo]
+sacHistos xs wid = sacHistos' xs wid 0
+
+sacStats :: (Integral a,FiniteBits a) => [a] -> [[Int]]
+-- Takes a list of Word8, Word16, or the like, whose length is a power of 2,
+-- and computes the deviations from the strict avalanche criterion.
+sacStats [] = []
+sacStats (x:xs) = map (\h -> sacRow h wid) (sacHistos (x:xs) wid)
+  where wid=finiteBitSize (x)
