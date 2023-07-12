@@ -53,9 +53,10 @@ sacRow h nbits = map (sacCountBit h) [0..(nbits-1)]
 
 sacHistos' :: (Integral a,Bits a) => [a] -> Int -> Int -> [Histo]
 sacHistos' xs wid b
-  | isNull h  = []
+  | null bf   = []
   | otherwise = h:(sacHistos' xs wid (b+1))
-  where h = foldr hCount (emptyHisto (shift 1 wid)) (bitFold xs b)
+  where bf = (bitFold xs b)
+	h = foldr hCount (emptyHisto (shift 1 wid)) bf
 
 -- FiniteBits finiteBitSize
 
