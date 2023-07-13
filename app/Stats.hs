@@ -2,6 +2,7 @@ module Stats
   ( Histo (..)
   , emptyHisto
   , hCount
+  , χ²
   , sacCountBit
   , bitFold
   , sacStats
@@ -21,8 +22,15 @@ emptyHisto n = Histo (Seq.replicate n 0)
 isNull :: Histo -> Bool
 isNull (Histo h) = Seq.null h
 
+total :: Histo -> Word
+total (Histo h) = sum h
+
 hCount :: Integral a => a -> Histo -> Histo
 hCount n (Histo h) = Histo (Seq.adjust' (+1) (fromIntegral n) h)
+
+χ² :: Histo -> Double
+χ² (Histo h) = sum $ map (\x -> ((fromIntegral x) - mean) ^2 / mean) (toList h)
+  where mean = fromIntegral (sum h) / fromIntegral (length h) :: Double
 
 squareWave :: Int -> [Int]
 squareWave n = map ((.&. (1::Int)) . (`shift` (-n))) [0..]
