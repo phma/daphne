@@ -58,8 +58,6 @@ sacHistos' xs wid b
   where bf = (bitFold xs b)
 	h = foldr hCount (emptyHisto (shift 1 wid)) bf
 
--- FiniteBits finiteBitSize
-
 sacHistos :: (Integral a,Bits a) => [a] -> Int -> [Histo]
 sacHistos xs wid = sacHistos' xs wid 0
 
@@ -69,3 +67,10 @@ sacStats :: (Integral a,FiniteBits a) => [a] -> [[Int]]
 sacStats [] = []
 sacStats (x:xs) = map (\h -> sacRow h wid) (sacHistos (x:xs) wid)
   where wid=finiteBitSize (x)
+
+-- import Data.Foldable
+-- sacStats (toList sbox)
+-- The result is all zeros, which shows that the s-box satisfies
+-- the strict avalanche criterion.
+-- sacStats (map (div257 45) [0..255])
+-- This is not all zeros. Neither mul257 nor mulOdd satisfies the SAC.
