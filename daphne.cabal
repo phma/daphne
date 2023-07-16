@@ -6,7 +6,9 @@ cabal-version: 1.12
 
 name:           daphne
 version:        0.1.0.0
+synopsis:       Self-synchronizing byte stream cipher
 description:    Please see the README on GitHub at <https://github.com/phma/daphne#readme>
+category:       Cryptography
 homepage:       https://github.com/phma/daphne#readme
 bug-reports:    https://github.com/phma/daphne/issues
 author:         Pierre Abbat
