@@ -28,15 +28,36 @@ zerodaph = keyDaphne (replicate 16 0)
 squaredaph = keyDaphne (take 16 (map (^2) [0..]))
 sqcrypt = snd $ listEncrypt squaredaph [0..255]
 
+doArg :: String -> IO Bool
+doArg x = return True
+
+doArgs :: [String] -> IO Bool
+doArgs [] = return True
+doArgs (x:xs) = do
+  validx <- doArg x
+  validxs <- doArgs xs
+  return (validx && validxs)
+
+usage :: IO ()
+usage = do
+  putStrLn "usage"
+
 main :: IO ()
 main = do
   args <- getArgs
-  putStrLn "Encrypt all 0s with all 0s"
-  putStr $ block16str $ snd $ listEncrypt zerodaph (replicate 256 0)
-  putStrLn "Encrypt 0..255 with squares"
-  putStr $ block16str $ sqcrypt
-  putStrLn "Decrypt the above"
-  putStr $ block16str $ snd $ listDecrypt squaredaph sqcrypt
-  putStrLn "Demonstrate resynchronization"
-  putStr $ block16str $ snd $ listDecrypt squaredaph (2:(tail sqcrypt))
+  if null args
+     then do
+	putStrLn "Encrypt all 0s with all 0s"
+	putStr $ block16str $ snd $ listEncrypt zerodaph (replicate 256 0)
+	putStrLn "Encrypt 0..255 with squares"
+	putStr $ block16str $ sqcrypt
+	putStrLn "Decrypt the above"
+	putStr $ block16str $ snd $ listDecrypt squaredaph sqcrypt
+	putStrLn "Demonstrate resynchronization"
+	putStr $ block16str $ snd $ listDecrypt squaredaph (2:(tail sqcrypt))
+     else do
+     valid <- doArgs args
+     if valid
+	then return ()
+	else usage
 
