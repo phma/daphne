@@ -7,6 +7,7 @@ import Data.Array
 import Data.Word
 import Data.List.Split
 import Stats
+import Cryptanalysis
 import System.Environment
 
 lineStr :: [Word8] -> String

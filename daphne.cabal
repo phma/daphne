@@ -43,6 +43,7 @@ library
 executable daphne-exe
   main-is: Main.hs
   other-modules:
+      Cryptanalysis
       Stats
       Paths_daphne
   hs-source-dirs:
