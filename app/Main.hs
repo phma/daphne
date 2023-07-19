@@ -30,7 +30,11 @@ squaredaph = keyDaphne (take 16 (map (^2) [0..]))
 sqcrypt = snd $ listEncrypt squaredaph [0..255]
 
 doArg :: String -> IO Bool
-doArg x = return True
+doArg x 
+  | x == "chosen-cipher" = do
+    chosenCiphertext
+    return True
+  | otherwise = return False
 
 doArgs :: [String] -> IO Bool
 doArgs [] = return True

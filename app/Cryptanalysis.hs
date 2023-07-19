@@ -1,6 +1,7 @@
 module Cryptanalysis
   ( concoctShiftRegister
   , decryptOne
+  , chosenCiphertext
   ) where
 
 import Data.Word
@@ -38,3 +39,6 @@ decryptOne key accBits = (fromIntegral plainOne*256)+fromIntegral plainZero
 	plainZero = invStep 0 left right
 	plainOne = invStep 1 left right
 
+chosenCiphertext :: IO ()
+chosenCiphertext = print $ sacStats $ map (decryptOne key) [0..65535]
+  where key = concoctShiftRegister 59049
