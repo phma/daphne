@@ -12,7 +12,7 @@ import Data.Word
 import Data.Bits
 import qualified Data.Sequence as Seq
 import Data.Sequence ((><), (<|), (|>), Seq((:<|)), Seq((:|>)))
-import Data.Foldable (toList)
+import Data.Foldable (toList,foldl')
 
 newtype Histo = Histo (Seq.Seq Word) deriving (Show)
 
@@ -25,8 +25,8 @@ isNull (Histo h) = Seq.null h
 total :: Histo -> Word
 total (Histo h) = sum h
 
-hCount :: Integral a => a -> Histo -> Histo
-hCount n (Histo h) = Histo (Seq.adjust' (+1) (fromIntegral n) h)
+hCount :: Integral a => Histo -> a -> Histo
+hCount (Histo h) n = Histo (Seq.adjust' (+1) (fromIntegral n) h)
 
 χ² :: Histo -> Double
 χ² (Histo h) = sum $ map (\x -> ((fromIntegral x) - mean) ^2 / mean) (toList h)
@@ -64,7 +64,7 @@ sacHistos' xs wid b
   | null bf   = []
   | otherwise = h:(sacHistos' xs wid (b+1))
   where bf = (bitFold xs b)
-	h = foldr hCount (emptyHisto (shift 1 wid)) bf
+	h = foldl' hCount (emptyHisto (shift 1 wid)) bf
 
 sacHistos :: (Integral a,Bits a) => [a] -> Int -> [Histo]
 sacHistos xs wid = sacHistos' xs wid 0
