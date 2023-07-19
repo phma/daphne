@@ -27,7 +27,7 @@ concoctSR bits n sr = ((fromIntegral bits) .&. 1) <| (concoctSR (shift bits (-1)
 concoctShiftRegister :: Int -> Seq.Seq Word8
 concoctShiftRegister bits = concoctSR bits 16 Seq.Empty
 
-decryptOne :: Seq.Seq Word8 -> Int -> Int
+decryptOne :: Seq.Seq Word8 -> Int -> Word16
 -- Takes 24 bits, accumulator and shift register, and returns 16 bits,
 -- decryption of 0x00 and 0x01.
 decryptOne key accBits = (fromIntegral plainOne*256)+fromIntegral plainZero
