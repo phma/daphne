@@ -1,5 +1,6 @@
 module Cryptanalysis
   ( concoctShiftRegister
+  , decryptOne
   ) where
 
 import Data.Word
@@ -25,3 +26,15 @@ concoctSR bits n sr = ((fromIntegral bits) .&. 1) <| (concoctSR (shift bits (-1)
 
 concoctShiftRegister :: Int -> Seq.Seq Word8
 concoctShiftRegister bits = concoctSR bits 16 Seq.Empty
+
+decryptOne :: Seq.Seq Word8 -> Int -> Int
+-- Takes 24 bits, accumulator and shift register, and returns 16 bits,
+-- decryption of 0x00 and 0x01.
+decryptOne key accBits = (fromIntegral plainOne*256)+fromIntegral plainZero
+  where sreg = concoctShiftRegister accBits
+	acc = fromIntegral (shift accBits (-16))
+	left = computeLeft key sreg acc
+	right = computeRight key sreg acc
+	plainZero = invStep 0 left right
+	plainOne = invStep 1 left right
+
