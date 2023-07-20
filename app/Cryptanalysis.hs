@@ -20,6 +20,9 @@ import Stats
  -
  - concoctShiftRegister takes a number and produces a shift register with 16
  - bits of the number spread out one bit per byte.
+ -
+ - The key and shift register are made of 0x00 and 0x01 because those are the
+ - identity operations of mulOdd and mul257, respectively.
  -}
 
 concoctSR :: Int -> Int -> Seq.Seq Word8 -> Seq.Seq Word8
@@ -41,5 +44,9 @@ decryptOne key accBits = (fromIntegral plainOne*256)+fromIntegral plainZero
 	plainOne = invStep 1 left right
 
 chosenCiphertext :: IO ()
+-- This runs through all 16M combinations of ciphertext and accumulator
+-- and subjects the resulting plaintext to an avalanche test. The results are
+-- a list of 24 lists of 16 numbers, which should not be much bigger than 4096
+-- in absolute value. A few numbers >8192 are okay, but >10000 is suspicious. 
 chosenCiphertext = print $ sacStats $ parMap rpar (decryptOne key) [0..16777215]
   where key = concoctShiftRegister 59049
