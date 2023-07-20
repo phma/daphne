@@ -41,5 +41,5 @@ decryptOne key accBits = (fromIntegral plainOne*256)+fromIntegral plainZero
 	plainOne = invStep 1 left right
 
 chosenCiphertext :: IO ()
-chosenCiphertext = print $ sacStats $ parMap rpar (decryptOne key) [0..1048575]
+chosenCiphertext = print $ sacStats $ parMap rpar (decryptOne key) [0..16777215]
   where key = concoctShiftRegister 59049
