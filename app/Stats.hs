@@ -58,7 +58,7 @@ bitFold :: Bits a => [a] -> Int -> [a]
 bitFold xs n = bitFoldSq xs (squareWaveBool n) Seq.Empty
 
 sacRow :: Histo -> Int -> [Int]
-sacRow h nbits = map (sacCountBit h) [0..(nbits-1)]
+sacRow h nbits = parMap rpar (sacCountBit h) [0..(nbits-1)]
 
 sacHistos' :: (Integral a,Bits a) => [a] -> Int -> Int -> [Histo]
 sacHistos' xs wid b
