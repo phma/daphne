@@ -13,6 +13,7 @@ import Data.Bits
 import qualified Data.Sequence as Seq
 import Data.Sequence ((><), (<|), (|>), Seq((:<|)), Seq((:|>)))
 import Data.Foldable (toList,foldl')
+import Control.Parallel.Strategies
 
 newtype Histo = Histo (Seq.Seq Word) deriving (Show)
 
@@ -73,7 +74,7 @@ sacStats :: (Integral a,FiniteBits a) => [a] -> [[Int]]
 -- Takes a list of Word8, Word16, or the like, whose length is a power of 2,
 -- and computes the deviations from the strict avalanche criterion.
 sacStats [] = []
-sacStats (x:xs) = map (\h -> sacRow h wid) (sacHistos (x:xs) wid)
+sacStats (x:xs) = parMap rpar (\h -> sacRow h wid) (sacHistos (x:xs) wid)
   where wid=finiteBitSize (x)
 
 -- import Data.Foldable

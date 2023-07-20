@@ -9,6 +9,7 @@ import Data.Bits
 import qualified Data.Sequence as Seq
 import Data.Sequence ((><), (<|), (|>), Seq((:<|)), Seq((:|>)))
 import Data.Foldable (toList)
+import Control.Parallel.Strategies
 import Cryptography.Daphne.Internals
 import Cryptography.Daphne
 import Stats
@@ -40,5 +41,5 @@ decryptOne key accBits = (fromIntegral plainOne*256)+fromIntegral plainZero
 	plainOne = invStep 1 left right
 
 chosenCiphertext :: IO ()
-chosenCiphertext = print $ sacStats $ map (decryptOne key) [0..65535]
+chosenCiphertext = print $ sacStats $ parMap rpar (decryptOne key) [0..1048575]
   where key = concoctShiftRegister 59049
