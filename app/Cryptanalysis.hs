@@ -2,13 +2,16 @@ module Cryptanalysis
   ( concoctShiftRegister
   , decryptOne
   , chosenCiphertext
+  , ciphertextBoth
+  , chosenPlainSdevs
   ) where
 
 import Data.Word
 import Data.Bits
 import qualified Data.Sequence as Seq
 import Data.Sequence ((><), (<|), (|>), Seq((:<|)), Seq((:|>)))
-import Data.Foldable (toList)
+import Data.Foldable (toList,foldl')
+import Control.Parallel
 import Control.Parallel.Strategies
 import Cryptography.Daphne.Internals
 import Cryptography.Daphne
@@ -50,3 +53,28 @@ chosenCiphertext :: IO ()
 -- in absolute value. A few numbers >8192 are okay, but >10000 is suspicious. 
 chosenCiphertext = print $ sacStats $ parMap rpar (decryptOne key) [0..16777215]
   where key = concoctShiftRegister 59049
+
+{- This chosen-plaintext attack consists of feeding the same Daphne the same
+ - plaintext stream, except that two bytes at the beginning are changed so as
+ - not to affect the accumulator, and comparing the ciphertexts.
+ -}
+
+xorBytes :: Word -> Word8
+xorBytes w64 = fromIntegral w8
+  where w32 = (w64 `xor` (w64 `shift` (-32)))
+	w16 = (w32 `xor` (w32 `shift` (-16)))
+	w8  = (w16 `xor` (w16 `shift` (-8)))
+
+twoBytes :: Word8 -> Word8 -> Word16
+twoBytes a b = (fromIntegral a) * 256 + (fromIntegral b)
+
+plaintext0 = map xorBytes [0..1048575]
+plaintext1 = 0x6a : 0x97 : tail (tail plaintext0)
+
+daph59049 = keyDaphne [1,0,0,1,0,1,0,1,0,1,1,0,0,1,1,1]
+ciphertext0 = snd $ listEncrypt daph59049 plaintext0
+ciphertext1 = snd $ listEncrypt daph59049 plaintext1
+ciphertextBoth = par ciphertext0 (zipWith twoBytes ciphertext0 ciphertext1)
+chosenPlainHisto = foldl' hCount (emptyHisto 65536) ciphertextBoth
+-- χ² has 65535 degrees of freedom. Mean 65535, variance 131070.
+chosenPlainSdevs = ((χ² chosenPlainHisto) - 65535) / (sqrt 131070)
