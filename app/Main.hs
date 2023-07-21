@@ -34,6 +34,9 @@ doArg x
   | x == "chosen-cipher" = do
     chosenCiphertext
     return True
+  | x == "chosen-plain" = do
+    chosenPlaintext
+    return True
   | otherwise = return False
 
 doArgs :: [String] -> IO Bool

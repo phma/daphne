@@ -4,6 +4,7 @@ module Cryptanalysis
   , chosenCiphertext
   , ciphertextBoth
   , chosenPlainSdevs
+  , chosenPlaintext
   ) where
 
 import Data.Word
@@ -68,7 +69,7 @@ xorBytes w64 = fromIntegral w8
 twoBytes :: Word8 -> Word8 -> Word16
 twoBytes a b = (fromIntegral a) * 256 + (fromIntegral b)
 
-plaintext0 = map xorBytes [0..1048575]
+plaintext0 = map xorBytes [0..16777215]
 plaintext1 = 0x6a : 0x97 : tail (tail plaintext0)
 
 daph59049 = keyDaphne [1,0,0,1,0,1,0,1,0,1,1,0,0,1,1,1]
@@ -78,3 +79,16 @@ ciphertextBoth = par ciphertext0 (zipWith twoBytes ciphertext0 ciphertext1)
 chosenPlainHisto = foldl' hCount (emptyHisto 65536) ciphertextBoth
 -- χ² has 65535 degrees of freedom. Mean 65535, variance 131070.
 chosenPlainSdevs = ((χ² chosenPlainHisto) - 65535) / (sqrt 131070)
+
+tellSigma :: Double -> String
+tellSigma sigma
+  | sigma < (-5) = "Too smooth. They look like a low-discrepancy sequence."
+  | sigma < 5    = "The streams look random and uncorrelated."
+  | otherwise    = "They aren't uniformly distributed, or they're correlated."
+
+chosenPlaintext :: IO ()
+chosenPlaintext = do
+  putStr "χ² independence test, χ² is "
+  putStr (show chosenPlainSdevs)
+  putStr "σ above mean\n"
+  putStrLn (tellSigma chosenPlainSdevs)
