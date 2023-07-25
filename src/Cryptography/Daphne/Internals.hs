@@ -34,11 +34,11 @@ funSbox = (xor 0x6e) . shuffle . (twist (-1)) . (xor 0x25)
 
 sbox = array (0,255)
   [ (i,funSbox i) | i <- [0..255] ]
-  :: Array Word8 Word8
+  :: UArray Word8 Word8
 
 invSbox = array (0,255)
   [ (funSbox i,i) | i <- [0..255] ]
-  :: Array Word8 Word8
+  :: UArray Word8 Word8
 
 -- Equivalent to shifting m and n left by 1 with a 1 bit (thus making them odd),
 -- multiplying, and shifting right (discarding the 1 bit).
@@ -57,11 +57,11 @@ mul257 a b = fromIntegral (mul257' (fromIntegral a) (fromIntegral b))
 
 invOdd = array (0,255)
   [ (i,j) | i <- [0..255], j <- [0..255], mulOdd i j == 0 ]
-  :: Array Word8 Word8
+  :: UArray Word8 Word8
 
 inv257 = array (0,255)
   [ (i,j) | i <- [0..255], j <- [0..255], mul257 i j == 1 ]
-  :: Array Word8 Word8
+  :: UArray Word8 Word8
 
 divOdd m n = mulOdd m (invOdd ! n)
 
