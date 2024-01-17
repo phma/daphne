@@ -14,9 +14,18 @@ import Data.Sequence ((><), (<|), (|>), Seq((:<|)), Seq((:|>)))
 import Data.Foldable (toList,foldl')
 import Control.Parallel
 import Control.Parallel.Strategies
+import Data.List (transpose)
+import Data.List.Split
 import Cryptography.Daphne.Internals
 import Cryptography.Daphne
 import Stats
+
+deal n = transpose . chunksOf n
+
+parListDeal :: Int -> Strategy a -> Strategy [a]
+parListDeal n strat xs
+  | n <= 1    = evalList strat xs
+  | otherwise = concat `fmap` parList (evalList strat) (deal n xs)
 
 {- This chosen-ciphertext attack consists of feeding a Daphne at least 16 MB
  - of 0x00 and 0x01 bytes and remembering what plaintext byte comes out for
