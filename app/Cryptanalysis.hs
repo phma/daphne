@@ -14,6 +14,7 @@ import Data.Sequence ((><), (<|), (|>), Seq((:<|)), Seq((:|>)))
 import Data.Foldable (toList,foldl')
 import Control.Parallel
 import Control.Parallel.Strategies
+import GHC.Conc (numCapabilities)
 import Data.List (transpose)
 import Data.List.Split
 import Cryptography.Daphne.Internals
@@ -61,7 +62,8 @@ chosenCiphertext :: IO ()
 -- and subjects the resulting plaintext to an avalanche test. The results are
 -- a list of 24 lists of 16 numbers, which should not be much bigger than 4096
 -- in absolute value. A few numbers >8192 are okay, but >10000 is suspicious. 
-chosenCiphertext = print $ sacStats $ parMap rpar (decryptOne key) [0..16777215]
+chosenCiphertext = print $ sacStats $ (map (decryptOne key) [0..16777215]
+  `using` parListDeal numCapabilities rdeepseq)
   where key = concoctShiftRegister 59049
 
 {- This chosen-plaintext attack consists of feeding the same Daphne the same
