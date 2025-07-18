@@ -20,8 +20,8 @@ import Data.Word
 import qualified Data.Sequence as Seq
 import Data.Sequence ((><), (<|), (|>), Seq((:<|)), Seq((:|>)))
 
--- | If a has at least 3 bits and k is relatively prime to the number of bits
--- in a, this permutation satisfies the strict avalanche criterion.
+-- | If n has at least 3 bits and k is relatively prime to the number of bits
+-- in n, this permutation satisfies the strict avalanche criterion.
 twist :: Bits a => Int -> a -> a
 twist k n = rotate n ((popCount n)*k)
 
