@@ -35,15 +35,11 @@ fn main() {
   }
   printvec(&squarecrypt);
   println!("Decrypt the above");
-  for i in 0..=255 {
-    squareplain.push(squaredaph1.decrypt(squarecrypt[i]));
-  }
+  squareplain=squaredaph1.decrypt_vec(&squarecrypt);
   printvec(&squareplain);
   println!("Demonstrate resynchronization");
   squareplain.clear();
   squarecrypt[0]=2;
-  for i in 0..=255 {
-    squareplain.push(squaredaph2.decrypt(squarecrypt[i]));
-  }
+  squareplain=squaredaph2.decrypt_vec(&squarecrypt);
   printvec(&squareplain);
 }

@@ -140,6 +140,14 @@ impl Daphne {
     crypt
   }
 
+  pub fn encrypt_vec(&mut self,plain:&[u8])->Vec<u8> {
+    let mut crypt:Vec<u8> = Vec::with_capacity(plain.len());
+    for i in 0..plain.len() {
+      crypt.push(self.encrypt(plain[i]));
+    }
+    crypt
+  }
+
   pub fn decrypt(&mut self,crypt:u8)->u8 {
     let plain=inv_step(crypt,self.left(),self.right());
     let sz=self.sreg.len();
@@ -147,6 +155,14 @@ impl Daphne {
     if sz>0 {
       self.sreg.copy_within(1..sz,0);
       self.sreg[sz-1]=crypt;
+    }
+    plain
+  }
+
+  pub fn decrypt_vec(&mut self,crypt:&[u8])->Vec<u8> {
+    let mut plain:Vec<u8> = Vec::with_capacity(crypt.len());
+    for i in 0..crypt.len() {
+      plain.push(self.decrypt(crypt[i]));
     }
     plain
   }
